@@ -78,6 +78,19 @@ defmodule ExAws.Config.AuthCache do
   def refresh_config(config, ets) do
     auth = ExAws.InstanceMeta.security_credentials(config)
     :ets.insert(ets, {:aws_instance_auth, auth})
+
+    auth =
+      case ExAws.Config.aws_instance_auth_adapter() do
+        nil ->
+          auth
+
+        adapter ->
+          auth = adapter.adapt_auth_config(auth, nil, nil)
+          :ets.insert(ets, {:aws_instance_auth, auth})
+
+          auth
+      end
+
     Process.send_after(self(), {:refresh_config, config}, refresh_in(auth[:expiration]))
     auth
   end

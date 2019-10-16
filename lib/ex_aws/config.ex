@@ -125,6 +125,10 @@ defmodule ExAws.Config do
     Application.get_env(:ex_aws, :awscli_auth_adapter, nil)
   end
 
+  def aws_instance_auth_adapter do
+    Application.get_env(:ex_aws, :aws_instance_auth_adapter, nil)
+  end
+
   defp valid_map_or_nil(map) when map == %{}, do: nil
   defp valid_map_or_nil(map), do: map
 end
